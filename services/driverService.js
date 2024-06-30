@@ -54,13 +54,13 @@ async function calculateAverageRating(driverId) {
 
     const ratings = driver.ratings;
     if (ratings.length === 0) {
-      return 0; // No ratings yet
+      return 0; 
     }
 
     const sum = ratings.reduce((acc, rating) => acc + rating, 0);
     const averageRating = sum / ratings.length;
 
-    // Optionally, update the driver's average rating in the database
+    // update the driver's average rating in the database
     driver.rating = averageRating;
     await driver.save();
 
