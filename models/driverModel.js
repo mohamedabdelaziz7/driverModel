@@ -1,9 +1,22 @@
 const mongoose = require('mongoose');
+
 const driverSchema = new mongoose.Schema({
-  name: { type: String, required: true },
-  phoneNumber: { type: String, required: true }, 
-  availability: { type: Boolean, default: true }, 
-  rating: { type: Number, default: 0 }, 
+  firstName: { type: String, required: true },
+  lastName: { type: String, required: true },
+  phoneNumber: { type: String, required: true },
+  email: { type: String, required: true, unique: true },
+  password: { type: String, required: true },
+  driverLicense: { type: String, required: true }, // URL or path to the uploaded license image
+  idCard: { type: String, required: true }, // URL or path to the uploaded ID card or passport image
+  licenseNumber: { type: String, required: true },
+  licenseExpirationDate: { type: Date, required: true },
+  birthDate: { type: Date, required: true },
+  status: { type: String, default: 'available' },
+  nationalId: { type: String, required: true, minlength: 14, maxlength: 14 },
+  createdAt: { type: Date, default: Date.now },
+  updatedAt: { type: Date, default: Date.now },
+  availability: { type: Boolean, default: true },
+  rating: { type: Number, default: 0 },
   location: {
     type: {
       type: String,
@@ -14,11 +27,6 @@ const driverSchema = new mongoose.Schema({
       type: [Number],
       required: true,
     },
-  },
-  license: {
-    number: { type: String, required: true },
-    type: { type: String, required: true },
-    expirationDate: { type: Date },
   },
   ratings: [{ type: Number }],
 });
