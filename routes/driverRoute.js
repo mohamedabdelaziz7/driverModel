@@ -1,8 +1,31 @@
 const express = require('express');
 const router = express.Router();
+const authController = require('../controllers/authController');
+const locationController = require('../controllers/locationController');
+const profileController = require('../controllers/profileController');
+const rideController = require('../controllers/rideController');
 const driverService = require('../services/driverService');
 
-// Create a new driver
+// Auth routes
+router.post('/login', authController.login);
+router.post('/register', authController.register);
+router.post('/forgot-password', authController.forgotPassword);
+router.post('/reset-password', authController.resetPassword);
+
+// Location access
+router.post('/location-access', locationController.allowLocationAccess);
+
+// Home page 
+router.get('/home', rideController.home);
+
+// Rides
+router.get('/trips-history/:driverId', rideController.getTripsHistory);
+
+// Driver profile
+router.get('/profile/:driverId', profileController.getProfile);
+router.put('/update-profile/:driverId', profileController.updateProfile);
+
+// create
 router.post('/', async (req, res) => {
   try {
     const newDriver = await driverService.createDriver(req.body);
@@ -11,8 +34,7 @@ router.post('/', async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
-
-// Get a specific driver by ID
+// get
 router.get('/:driverId', async (req, res) => {
   try {
     const driver = await driverService.getDriverById(req.params.driverId);
@@ -24,8 +46,7 @@ router.get('/:driverId', async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
-
-// Update driver details
+// update
 router.put('/:driverId', async (req, res) => {
   try {
     const updatedDriver = await driverService.updateDriver(req.params.driverId, req.body);
@@ -37,8 +58,7 @@ router.put('/:driverId', async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
-
-// Delete a driver by ID
+// delete
 router.delete('/:driverId', async (req, res) => {
   try {
     const message = await driverService.deleteDriver(req.params.driverId);
@@ -47,8 +67,7 @@ router.delete('/:driverId', async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
-
-// Add a rating to a driver
+// rate
 router.post('/:driverId/rate', async (req, res) => {
   try {
     const { rating } = req.body;
@@ -73,4 +92,5 @@ router.post('/:driverId/rate', async (req, res) => {
 });
 
 module.exports = router;
+
 
