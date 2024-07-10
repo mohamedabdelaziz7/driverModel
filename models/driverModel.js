@@ -29,6 +29,13 @@ const driverSchema = new mongoose.Schema({
     },
   },
   ratings: [{ type: Number }],
+  reviews: [
+    {
+      user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+      rating: { type: Number, required: true },
+      comment: { type: String },
+    },
+  ],
 });
 
 // Create a geospatial index for the location field
