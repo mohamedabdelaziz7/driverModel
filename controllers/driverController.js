@@ -1,52 +1,118 @@
-const driverService = require('../services/driverService');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const Driver = require('../models/driverModel');
 
-// Create a new driver
-async function createDriver(req, res) {
+// Home Page
+exports.home = async (req, res) => {
+  // Implement home page logic
+};
+
+// Get trips history
+exports.getTripsHistory = async (req, res) => {
+  // Implement trips history logic
+};
+
+// Register
+exports.register = async (req, res) => {
+  const { firstName, lastName, phoneNumber, email, password } = req.body;
+
   try {
-    const newDriver = await driverService.createDriver(req.body);
+    const hashedPassword = await bcrypt.hash(password, 12);
+    const newDriver = new Driver({
+      firstName,
+      lastName,
+      phoneNumber,
+      email,
+      password: hashedPassword,
+    });
+
+    await newDriver.save();
     res.status(201).json(newDriver);
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    res.status(500).json({ error: error.message });
   }
-}
+};
 
-// Get driver details by ID
-async function getDriverById(req, res) {
+// Login driver
+exports.login = async (req, res) => {
+  const { email, password } = req.body;
+
   try {
-    const driver = await driverService.getDriverById(req.params.driverId);
+    const driver = await Driver.findOne({ email });
     if (!driver) {
-      res.status(404).json({ message: 'Driver not found' });
-    } else {
-      res.json(driver);
+      return res.status(404).json({ error: 'Driver not found' });
     }
+
+    const isMatch = await bcrypt.compare(password, driver.password);
+    if (!isMatch) {
+      return res.status(400).json({ error: 'Invalid credentials' });
+    }
+
+    const token = jwt.sign({ driverId: driver._id }, process.env.JWT_SECRET, {
+      expiresIn: '1h',
+    });
+
+    res.status(200).json({ token });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
-}
+};
 
-// Update driver details by ID
-async function updateDriver(req, res) {
-  try {
-    const updatedDriver = await driverService.updateDriver(req.params.driverId, req.body);
-    res.json(updatedDriver);
-  } catch (error) {
-    res.status(400).json({ error: error.message });
-  }
-}
+// Forgot password
+exports.forgotPassword = async (req, res) => {
+  // Implement forgot password logic
+};
 
-// Delete driver by ID
-async function deleteDriver(req, res) {
+// Reset password
+exports.resetPassword = async (req, res) => {
+  // Implement reset password logic
+};
+
+// Get driver profile
+exports.getProfile = async (req, res) => {
   try {
-    await driverService.deleteDriver(req.params.driverId);
-    res.json({ message: 'Driver deleted successfully' });
+    const driver = await Driver.findById(req.params.driverId);
+    if (!driver) {
+      return res.status(404).json({ error: 'Driver not found' });
+    }
+    res.status(200).json(driver);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
-}
+};
 
-module.exports = {
-  createDriver,
-  getDriverById,
-  updateDriver,
-  deleteDriver,
+// Update driver profile
+exports.updateProfile = async (req, res) => {
+  try {
+    const updatedDriver = await Driver.findByIdAndUpdate(
+      req.params.driverId,
+      req.body,
+      { new: true }
+    );
+    if (!updatedDriver) {
+      return res.status(404).json({ error: 'Driver not found' });
+    }
+    res.status(200).json(updatedDriver);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+// Allow location access
+exports.allowLocationAccess = async (req, res) => {
+  const { driverId, location } = req.body;
+
+  try {
+    const driver = await Driver.findById(driverId);
+    if (!driver) {
+      return res.status(404).json({ error: 'Driver not found' });
+    }
+
+    driver.location = location;
+    await driver.save();
+
+    res.status(200).json(driver);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 };
