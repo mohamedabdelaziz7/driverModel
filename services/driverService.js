@@ -45,35 +45,9 @@ async function updateDriver(driverId, updateData) {
   }
 }
 
-async function calculateAverageRating(driverId) {
-  try {
-    const driver = await Driver.findById(driverId);
-    if (!driver) {
-      throw new Error('Driver not found');
-    }
-
-    const ratings = driver.ratings;
-    if (ratings.length === 0) {
-      return 0; 
-    }
-
-    const sum = ratings.reduce((acc, rating) => acc + rating, 0);
-    const averageRating = sum / ratings.length;
-
-    //update the driver's average rating in the database
-    driver.rating = averageRating;
-    await driver.save();
-
-    return averageRating;
-  } catch (error) {
-    throw new Error(`Error calculating average rating: ${error.message}`);
-  }
-}
-
 module.exports = {
   createDriver,
   deleteDriver,
   getDriverById,
   updateDriver,
-  calculateAverageRating,
 };
