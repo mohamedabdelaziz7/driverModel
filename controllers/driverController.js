@@ -60,12 +60,12 @@ exports.login = async (req, res) => {
 
 // Forgot password
 exports.forgotPassword = async (req, res) => {
-  // Implementation for forgot password
+ 
 };
 
 // Reset password
 exports.resetPassword = async (req, res) => {
-  // Implementation for reset password
+ 
 };
 
 // Get driver profile
