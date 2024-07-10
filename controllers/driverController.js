@@ -4,12 +4,12 @@ const Driver = require('../models/driverModel');
 
 // Home Page
 exports.home = async (req, res) => {
-
+  res.send('Welcome to the Driver API');
 };
 
 // Get trips history
 exports.getTripsHistory = async (req, res) => {
-
+  // Implementation here
 };
 
 // Register
@@ -60,12 +60,12 @@ exports.login = async (req, res) => {
 
 // Forgot password
 exports.forgotPassword = async (req, res) => {
- 
+  // Implementation here
 };
 
 // Reset password
 exports.resetPassword = async (req, res) => {
-  
+  // Implementation here
 };
 
 // Get driver profile
