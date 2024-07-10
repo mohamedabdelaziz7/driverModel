@@ -1,13 +1,19 @@
 const mongoose = require('mongoose');
 
+const reviewSchema = new mongoose.Schema({
+  user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+  rating: { type: Number, required: true },
+  comment: { type: String },
+});
+
 const driverSchema = new mongoose.Schema({
   firstName: { type: String, required: true },
   lastName: { type: String, required: true },
   phoneNumber: { type: String, required: true },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
-  driverLicense: { type: String, required: true }, 
-  idCard: { type: String, required: true }, 
+  driverLicense: { type: String, required: true },
+  idCard: { type: String, required: true },
   licenseNumber: { type: String, required: true },
   licenseExpirationDate: { type: Date, required: true },
   birthDate: { type: Date, required: true },
@@ -29,13 +35,7 @@ const driverSchema = new mongoose.Schema({
     },
   },
   ratings: [{ type: Number }],
-  reviews: [
-    {
-      user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-      rating: { type: Number, required: true },
-      comment: { type: String },
-    },
-  ],
+  reviews: [reviewSchema],
 });
 
 // Create a geospatial index for the location field
