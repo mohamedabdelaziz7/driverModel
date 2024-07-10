@@ -20,12 +20,12 @@ if (process.env.NODE_ENV === 'development') {
   console.log(`mode: ${process.env.NODE_ENV}`);
 }
 
-// Root Route
+
 app.get('/', (req, res) => {
   res.send('Welcome to the Driver API');
 });
 
-// Mount Routes
+// Routes
 app.use('/api/v1/driver', driverRoute);
 
 const PORT = process.env.PORT || 8000;
