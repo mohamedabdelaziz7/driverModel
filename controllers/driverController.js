@@ -9,7 +9,7 @@ exports.home = async (req, res) => {
 
 // Get trips history
 exports.getTripsHistory = async (req, res) => {
-  // Implementation for trips history
+  
 };
 
 // Register
